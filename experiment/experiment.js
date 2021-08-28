@@ -21,7 +21,7 @@ jsPsych.init({
   }
 });
 
-/ 使用instructions呈现指导语（可以连续呈现多屏）
+// 使用instructions呈现指导语（可以连续呈现多屏）
 var instr = {
   type: "instructions",
   pages: [
