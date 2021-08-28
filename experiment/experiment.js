@@ -12,15 +12,6 @@ var welcome = {
   post_trial_gap: 100
 };
 
-// 运行实验（总控制）
-jsPsych.init({
-  timeline: timeline,
-  on_finish: function() {
-    jsPsych.data.get().localSave("csv", "data.csv");  // download from browser
-    document.write("<h1 style='text-align:center; height:500pt; line-height:500pt'>实验结束，感谢您的参与！</h1>");
-  }
-});
-
 // 使用instructions呈现指导语（可以连续呈现多屏）
 var instr = {
   type: "instructions",
