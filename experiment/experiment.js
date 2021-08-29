@@ -40,19 +40,16 @@ var set_html_style = {
     },
 }
 
-var set_html_style_EAST = {
-    type: 'call-function',
-    func: function() {
-        document.body.style.backgroundColor = 'black'
-        document.body.style.color = 'white'
-        document.body.style.fontSize = '32pt'
-        document.body.style.fontFamily = '微软雅黑'
-        document.body.style.fontWeight = 'normal'
-        document.body.style.lineHeight = '1.2em'
-        document.body.style.cursor = 'none'
-    },
-}
 
+function set_html_style_iat() {
+    document.body.style.backgroundColor = 'black'
+    document.body.style.color = 'white'
+    document.body.style.fontSize = '32pt'
+    document.body.style.fontFamily = '微软雅黑'
+    document.body.style.fontWeight = 'normal'
+    document.body.style.lineHeight = '1.2em'
+    document.body.style.cursor = 'none'
+}
 
 /* Blocks: Basics */
 
@@ -85,7 +82,7 @@ var welcome = {
     <按空格键继续><br/>
     <b>实验过程中请勿退出全屏</b><br/><br/></p>
     <p style="font: 20pt 华文中宋; color: grey">
-    中国科学院心理研究所<br/>2020年</p>`,
+    中国科学院心理研究所<br/>2021年8月29日</p>`,
     choices: [' '],
     post_trial_gap: 100
 }
@@ -93,7 +90,7 @@ var welcome = {
 var warmup = {
     type: 'html-button-response',
     stimulus: '<p>请做好准备……</p>',
-    choices: ['<span id="timer">5</span>秒后继续'],
+    choices: ['<span id="timer">3</span>秒后继续'],
     button_html: btn_html_timer
 }
 
@@ -167,58 +164,86 @@ var Age = {
 var Birth = {
     type: 'survey-html-form',
     data: { varname: 'Birth' },
-    preamble: '你的生日',
+    preamble: '你的出生日期',
     html: '<p><input name="Q0" type="date" value="2000-01-01" required /></p>',
     button_label: '继续',
     on_finish: function(data) { addRespFromSurvey(data) }
 }
 
-var Email = {
+var Phone = {
     type: 'survey-html-form',
-    data: { varname: 'Email' },
-    preamble: '你的邮箱',
-    html: '<p><input name="Q0" type="email" placeholder="非必填" /></p>',
+    data: { varname: 'Phone' },
+    preamble: '你的电话号码',
+    html: `
+    <p><input name="Q0" type="number" placeholder="12345678901" 
+    oninput="if(value.length>11) value=value.slice(0,11)" required /></p>`,
     button_label: '继续',
     on_finish: function(data) { addRespFromSurvey(data) }
 }
 
-var School = {
+var Father_edu = {
     type: 'survey-html-form',
-    data: { varname: 'School' },
-    preamble: '你的学校',
+    data: { varname: 'Father_edu' },
+    preamble: '你父亲的受教育水平',
     html: `
     <p><select name="Q0" size=10>
-    <option>北京大学</option>
-    <option>清华大学</option>
-    <option>中国人民大学</option>
-    <option>北京师范大学</option>
-    <option>其他</option>
+    <option>没上过学</option>
+    <option>小学</option>
+    <option>初中</option>
+    <option>高中或中专</option>
+    <option>本科或大专</option>
+    <option>研究生</option>
+    <option>不知道</option>
     </select></p>`,
     button_label: '继续',
     on_finish: function(data) { addRespFromSurvey(data) }
 }
 
-var Language = {
-    type: 'survey-multi-select',
-    data: { varname: 'Language' },
-    questions: [{
-        prompt: '你会哪些语言？',
-        options: ['汉语', '英语', '日语', '韩语', '西班牙语', '其他'],
-        horizontal: false,
-        required: false
-    }],
+var Mather_edu = {
+    type: 'survey-html-form',
+    data: { varname: 'Mather_edu' },
+    preamble: '你母亲的受教育水平',
+    html: `
+    <p><select name="Q0" size=10>
+    <option>没上过学</option>
+    <option>小学</option>
+    <option>初中</option>
+    <option>高中或中专</option>
+    <option>本科或大专</option>
+    <option>研究生</option>
+    <option>不知道</option>
+    </select></p>`,
     button_label: '继续',
-    on_finish: function(data) { replaceComma(data) }
+    on_finish: function(data) { addRespFromSurvey(data) }
 }
 
-var NameLiking = {
+var Income = {
+    type: 'survey-html-form',
+    data: { varname: 'Income' },
+    preamble: '你们家人均月收入是多少？',
+    html: `
+    <p><select name="Q0" size=10>
+    <option>1000以下</option>
+    <option>1000-1999</option>
+    <option>2000-4999</option>
+    <option>5000-9999</option>
+    <option>1万-3万</option>
+    <option>3万以上</option>
+    </select></p>`,
+    button_label: '继续',
+    on_finish: function(data) { addRespFromSurvey(data) }
+}
+
+
+
+var Subjective_ses = {
     type: 'html-slider-response',
-    data: { varname: 'NameLiking' },
+    data: { varname: 'Subjective_ses' },
     on_load: function() { setSliderAttr() },
-    stimulus: '总体而言，你在多大程度上喜欢自己的名字？<br/>（1 = 非常不喜欢，9 = 非常喜欢）',
-    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    stimulus: '将下面梯子想象成一个人在中国的位置，梯子最顶端的人收入最高，受教育水平最高，工作最好；梯子最低端的人收入最低，受教育水平最低，工作最差。你认为你家在梯子的哪个水平上？',
+    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
     min: 1,
-    max: 9,
+    max: 10,
     start: 5,
     prompt: '<b id="slider-value">_</b><br/><br/>',
     button_label: '继续',
@@ -291,249 +316,402 @@ var OpenEnded = {
 }
 
 
-/* Blocks: Experiments */
+/* Blocks: IAT */
 
-// Stimuli
+// Template (the ONLY thing you need to modify)
 
-var EAST_attrib_words = [
-    { data: { stim_type: 'pos' }, s: '健康' },
-    { data: { stim_type: 'pos' }, s: '快乐' },
-    { data: { stim_type: 'pos' }, s: '美好' },
-    { data: { stim_type: 'neg' }, s: '邪恶' },
-    { data: { stim_type: 'neg' }, s: '吝啬' },
-    { data: { stim_type: 'neg' }, s: '卑鄙' },
-]
+var key_L = 'f'
+var key_R = 'j'
+var iat_temp = {
+    // Pairs A & Pairs B should be compatible
+    attribA: { label: '重要', items: ['重要', '珍惜', '重视', '要紧', '关键'] },
+    attribB: { label: '不重要', items: ['不要紧', '忽略', '忽视', '无所谓', '轻视'] },
+    targetA: { label: '人', items: ['人类', '人', '人群', '人们', '百姓'] },
+    targetB: { label: '物体', items: ['物体', '物质', '工具', '东西', '物件'] },
+}
+var attrib_color = 'white'
+var target_color = 'rgb(150, 250, 100)'
 
-var a1 = '玫瑰'
-var a2 = '牡丹'
-var b1 = '空气'
-var b2 = '土地'
-var c1 = '蟑螂'
-var c2 = '蚊子'
-var blu = 'rgb(0, 125, 150)'
-var grn = 'rgb(0, 150, 125)'
-var EAST_target_words = [
-    { data: { stim_type: blu, x: 'a' }, s: a1 },
-    { data: { stim_type: blu, x: 'a' }, s: a2 },
-    { data: { stim_type: blu, x: 'b' }, s: b1 },
-    { data: { stim_type: blu, x: 'b' }, s: b2 },
-    { data: { stim_type: blu, x: 'c' }, s: c1 },
-    { data: { stim_type: blu, x: 'c' }, s: c2 },
-    { data: { stim_type: grn, x: 'a' }, s: a1 },
-    { data: { stim_type: grn, x: 'a' }, s: a2 },
-    { data: { stim_type: grn, x: 'b' }, s: b1 },
-    { data: { stim_type: grn, x: 'b' }, s: b2 },
-    { data: { stim_type: grn, x: 'c' }, s: c1 },
-    { data: { stim_type: grn, x: 'c' }, s: c2 },
-]
+// Randomize stimuli pairs (left vs. right; compatible-blocks first vs. incompatible-blocks first)
 
-var tag_LR1 = `<div class="tag-left">按“F”键:<br/>积极词</div>
-               <div class="tag-right">按“J”键:<br/>消极词</div>`
+var version = jsPsych.randomization.factorial({ attrib: [1, 2], target: [1, 2] })[0] // one of four, e.g., { attrib: 2, target: 1 }
+var compatible_first = (version.attrib == version.target) ? true : false
 
-var tag_LR2 = `<div class="tag-left">按“F”键:<br/><span style="color:${blu}">蓝色</span></div>
-               <div class="tag-right">按“J”键:<br/><span style="color:${grn}">绿色</span></div>`
+var iat = JSON.parse(JSON.stringify(iat_temp)) // 深复制（iat_temp仅为指针，浅复制会同步修改两者）
+if (version.attrib == 2) {
+    iat.attribA.label = iat_temp.attribB.label
+    iat.attribA.items = iat_temp.attribB.items
+    iat.attribB.label = iat_temp.attribA.label
+    iat.attribB.items = iat_temp.attribA.items
+}
+if (version.target == 2) {
+    iat.targetA.label = iat_temp.targetB.label
+    iat.targetA.items = iat_temp.targetB.items
+    iat.targetB.label = iat_temp.targetA.label
+    iat.targetB.items = iat_temp.targetA.items
+}
 
-var tag_LR3 = `<div class="tag-left">按“F”键:<br/>积极词<br/>或<br/><span style="color:${blu}">蓝色</span></div>
-               <div class="tag-right">按“J”键:<br/>消极词<br/>或<br/><span style="color:${grn}">绿色</span></div>`
+// Top-left and top-right tags
+
+var tag_IAT_prac_attrib = `<div class="tag-left">按“${key_L.toUpperCase()}”键:<br/>
+                           <span style="color:${attrib_color}">${iat.attribA.label}</span></div>
+                           <div class="tag-right">按“${key_R.toUpperCase()}”键:<br/>
+                           <span style="color:${attrib_color}">${iat.attribB.label}</span></div>`
+
+var tag_IAT_prac_target_1 = `<div class="tag-left">按“${key_L.toUpperCase()}”键:<br/>
+                             <span style="color:${target_color}">${iat.targetA.label}</span></div>
+                             <div class="tag-right">按“${key_R.toUpperCase()}”键:<br/>
+                             <span style="color:${target_color}">${iat.targetB.label}</span></div>`
+
+var tag_IAT_prac_target_2 = `<div class="tag-left">按“${key_L.toUpperCase()}”键:<br/>
+                             <span style="color:${target_color}">${iat.targetB.label}</span></div>
+                             <div class="tag-right">按“${key_R.toUpperCase()}”键:<br/>
+                             <span style="color:${target_color}">${iat.targetA.label}</span></div>`
+
+var tag_IAT_test_1 = `<div class="tag-left">按“${key_L.toUpperCase()}”键:<br/>
+                      <span style="color:${attrib_color}">${iat.attribA.label}</span><br/>或<br/>
+                      <span style="color:${target_color}">${iat.targetA.label}</span></div>
+                      <div class="tag-right">按“${key_R.toUpperCase()}”键:<br/>
+                      <span style="color:${attrib_color}">${iat.attribB.label}</span><br/>或<br/>
+                      <span style="color:${target_color}">${iat.targetB.label}</span></div>`
+
+var tag_IAT_test_2 = `<div class="tag-left">按“${key_L.toUpperCase()}”键:<br/>
+                      <span style="color:${attrib_color}">${iat.attribA.label}</span><br/>或<br/>
+                      <span style="color:${target_color}">${iat.targetB.label}</span></div>
+                      <div class="tag-right">按“${key_R.toUpperCase()}”键:<br/>
+                      <span style="color:${attrib_color}">${iat.attribB.label}</span><br/>或<br/>
+                      <span style="color:${target_color}">${iat.targetA.label}</span></div>`
 
 // Instructions
 
-var EAST_prac1_instr = {
+var IAT_instr0 = {
+    type: 'html-button-response',
+    data: { version_attrib: version.attrib, version_target: version.target },
+    stimulus: `
+    <h3>词语分类任务</h3>
+    <p>在接下来的任务中，你需要对一系列词语进行分类。<br/>
+    请先熟悉这些词语，这有利于你完成接下来的任务。</p>
+    <table align="center" border=1 cellpadding=3 cellspacing=0>
+    <tr> <th>类别</th> <th>词语</th> </tr>
+    <tr> <td>&emsp;${iat_temp.attribA.label}&emsp;</td> <td>&emsp;${iat_temp.attribA.items.join('、')}&emsp;</td> </tr>
+    <tr> <td>&emsp;${iat_temp.attribB.label}&emsp;</td> <td>&emsp;${iat_temp.attribB.items.join('、')}&emsp;</td> </tr>
+    <tr> <td>&emsp;${iat_temp.targetA.label}&emsp;</td> <td>&emsp;${iat_temp.targetA.items.join('、')}&emsp;</td> </tr>
+    <tr> <td>&emsp;${iat_temp.targetB.label}&emsp;</td> <td>&emsp;${iat_temp.targetB.items.join('、')}&emsp;</td> </tr>
+    </table><br/>`,
+    choices: ['<span id="timer">10</span>秒后继续'],
+    button_html: btn_html_timer,
+    on_finish: set_html_style_iat
+}
+
+var IAT_instr1 = {
     type: 'html-keyboard-response',
     stimulus: `
-    <p style="text-align: left; font-size: 20pt">
-    练习任务1：<br/><br/>
-    下面是一个“形容词分类”任务。<br/>
-    屏幕上将依次呈现一些形容词，它们分别具有<span style="color:#FFD866">积极</span>或<span style="color:#FFD866">消极</span>的含义。<br/>
-    在每个形容词呈现之前，屏幕上会出现注视点“+”来提醒您注意。<br/>
-    在每个形容词呈现之后，请<span style="color:#FFD866">尽量正确并且快速地</span>做出按键反应。<br/>
-    - 如果出现<span style="color:#FFD866">积极</span>形容词，请按<span style="color:#FFD866">“F”键</span>。<br/>
-    - 如果出现<span style="color:#FFD866">消极</span>形容词，请按<span style="color:#FFD866">“J”键</span>。<br/>
-    每次判断均会有正确（“√”）或错误（“X”）的反馈。<br/><br/>
-    现在，请您双手食指分别放在“F”键和“J”键上，并保证实验过程中双手不离开键盘。<br/>
-    如果您已认真阅读并充分理解了上述要求，请按空格键开始。</p>`,
-    choices: [' ']
+    <div class="tag-bottom"><p>
+    —— 任务1：对“${iat.attribA.label}”词和“${iat.attribB.label}”词分类 ——<br/>
+    不同词语会出现在屏幕中央，类别标签将始终显示在屏幕上方<br/>
+    <span style="color:#FFD866"><b>请根据上方标签的提示，尽可能正确并且快速地做出按键反应</b></span><br/>
+    当按键错误时屏幕中会出现<span style="color:red"> X </span>，需要按另一个键纠正才能继续<br/><br/>
+    请把双手食指分别放在键盘的“${key_L.toUpperCase()}”键和“${key_R.toUpperCase()}”键上<br/>
+    按<空格键>开始
+    </p></div>`,
+    choices: [' '],
+    prompt: tag_IAT_prac_attrib
 }
 
-var EAST_prac2_instr = {
+var IAT_instr2 = {
     type: 'html-keyboard-response',
     stimulus: `
-    <p style="text-align: left; font-size: 20pt">
-    练习任务2：<br/><br/>
-    下面是一个“名词分类”任务。<br/>
-    屏幕上将依次呈现一些名词，它们分别具有<span style="color:${blu}">蓝色■</span>或<span style="color:${grn}">绿色■</span>的字体颜色。<br/>
-    在每个名词呈现之前，屏幕上会出现注视点“+”来提醒您注意。<br/>
-    在每个名词呈现之后，请<span style="color:#FFD866">尽量正确并且快速地</span>做出按键反应。<br/>
-    - 如果出现<span style="color:${blu}">蓝色</span>名词，请按<span style="color:#FFD866">“F”键</span>。<br/>
-    - 如果出现<span style="color:${grn}">绿色</span>名词，请按<span style="color:#FFD866">“J”键</span>。<br/>
-    每次判断均会有正确(“√”)或错误(“X”)的反馈。<br/><br/>
-    现在，请您双手食指分别放在“F”键和“J”键上，并保证实验过程中双手不离开键盘。<br/>
-    如果您已认真阅读并充分理解了上述要求，请按空格键开始。</p>`,
-    choices: [' ']
+    <div class="tag-bottom"><p>
+    —— 任务2：对“${iat.targetA.label}”词和“${iat.targetB.label}”词分类 ——<br/>
+    <span style="color:#78DCE8"><b>注意上方，类别标签和需要分类的词语都已经改变</b></span><br/>
+    <span style="color:#FFD866"><b>请根据上方标签的提示，尽可能正确并且快速地做出按键反应</b></span><br/>
+    当按键错误时屏幕中会出现<span style="color:red"> X </span>，需要按另一个键纠正才能继续<br/><br/>
+    请把双手食指分别放在键盘的“${key_L.toUpperCase()}”键和“${key_R.toUpperCase()}”键上<br/>
+    按<空格键>开始
+    </p></div>`,
+    choices: [' '],
+    prompt: tag_IAT_prac_target_1
 }
 
-var EAST_test_instr = {
+var IAT_instr3 = {
     type: 'html-keyboard-response',
     stimulus: `
-    <p style="text-align: left; font-size: 20pt">
-    正式任务：<br/><br/>
-    接下来是正式任务，先前两个练习任务中的白色形容词和彩色名词会随机交替出现。<br/>
-    你仍然需要<span style="color:#FFD866">尽量正确并且快速地</span>对它们的属性做出判断：<br/>
-    - 如果出现<span style="color:#FFD866">积极</span>形容词或<span style="color:${blu}">蓝色</span>名词，请按<span style="color:#FFD866">“F”键</span>。<br/>
-    - 如果出现<span style="color:#FFD866">消极</span>形容词或<span style="color:${grn}">绿色</span>名词，请按<span style="color:#FFD866">“J”键</span>。<br/>
-    这次将不再呈现关于正确或错误的反馈。<br/><br/>
-    现在，请您双手食指分别放在“F”键和“J”键上，并保证实验过程中双手不离开键盘。<br/>
-    如果您已认真阅读并充分理解了上述要求，请按空格键开始。</p>`,
-    choices: [' ']
+    <div class="tag-bottom"><p>
+    —— 任务3：对“${iat.attribA.label}/${iat.targetA.label}”词和“${iat.attribB.label}/${iat.targetB.label}”词分类 ——<br/>
+    <span style="color:#78DCE8"><b>注意上方，之前的四类词语将混合在一起交替呈现</b></span><br/>
+    <span style="color:#FFD866"><b>请根据上方标签的提示，尽可能正确并且快速地做出按键反应</b></span><br/>
+    当按键错误时屏幕中会出现<span style="color:red"> X </span>，需要按另一个键纠正才能继续<br/><br/>
+    请把双手食指分别放在键盘的“${key_L.toUpperCase()}”键和“${key_R.toUpperCase()}”键上<br/>
+    按<空格键>开始
+    </p></div>`,
+    choices: [' '],
+    prompt: tag_IAT_test_1
 }
 
-// Exp. Blocks
-
-var EAST_prac1 = {
-    // stimulus items
-    timeline_variables: EAST_attrib_words,
-    // single trial
-    timeline: [{
-            // fixation
-            type: 'html-keyboard-response',
-            stimulus: '+',
-            choices: jsPsych.NO_KEYS,
-            prompt: tag_LR1,
-            trial_duration: 500,
-            post_trial_gap: 0,
-            response_ends_trial: false
-        },
-        {
-            // word stimulus
-            type: 'categorize-html',
-            data: jsPsych.timelineVariable('data'),
-            stimulus: jsPsych.timelineVariable('s'),
-            choices: ['f', 'j'],
-            key_answer: function() {
-                switch (jsPsych.timelineVariable('data', true).stim_type) {
-                    case 'pos':
-                        return keyCode('f')
-                    case 'neg':
-                        return keyCode('j')
-                }
-            },
-            prompt: tag_LR1,
-            correct_text: tag_LR1 + feedback_right,
-            incorrect_text: tag_LR1 + feedback_wrong,
-            feedback_duration: 500,
-            force_correct_button_press: true
-        },
-    ],
-    // trial presentation
-    repetitions: 2,
-    randomize_order: true
-}
-
-var EAST_prac2 = {
-    // stimulus items
-    timeline_variables: EAST_target_words,
-    // single trial
-    timeline: [{
-            // fixation
-            type: 'html-keyboard-response',
-            stimulus: '+',
-            choices: jsPsych.NO_KEYS,
-            prompt: tag_LR2,
-            trial_duration: 500,
-            post_trial_gap: 0,
-            response_ends_trial: false
-        },
-        {
-            // word stimulus
-            type: 'categorize-html',
-            data: jsPsych.timelineVariable('data'),
-            stimulus: function() {
-                return `<p style="color:${jsPsych.timelineVariable('data', true).stim_type}">${jsPsych.timelineVariable('s', true)}</p>`
-            },
-            choices: ['f', 'j'],
-            key_answer: function() {
-                switch (jsPsych.timelineVariable('data', true).stim_type) {
-                    case blu:
-                        return keyCode('f')
-                    case grn:
-                        return keyCode('j')
-                }
-            },
-            prompt: tag_LR2,
-            correct_text: tag_LR2 + feedback_right,
-            incorrect_text: tag_LR2 + feedback_wrong,
-            feedback_duration: 500,
-            force_correct_button_press: true
-        },
-    ],
-    // trial presentation
-    repetitions: 1,
-    randomize_order: true
-}
-
-var EAST_test_warmup = {
+var IAT_instr4 = {
     type: 'html-keyboard-response',
-    stimulus: '',
-    choices: jsPsych.NO_KEYS,
-    prompt: tag_LR3,
-    trial_duration: 2000,
-    response_ends_trial: false
+    stimulus: `
+    <div class="tag-bottom"><p>
+    —— 任务4：对“${iat.attribA.label}/${iat.targetA.label}”词和“${iat.attribB.label}/${iat.targetB.label}”词分类 ——<br/>
+    <span style="color:#78DCE8"><b>与刚才的任务完全相同，请再次对这四类词语分类</b></span><br/>
+    <span style="color:#FFD866"><b>请根据上方标签的提示，尽可能正确并且快速地做出按键反应</b></span><br/>
+    当按键错误时屏幕中会出现<span style="color:red"> X </span>，需要按另一个键纠正才能继续<br/><br/>
+    请把双手食指分别放在键盘的“${key_L.toUpperCase()}”键和“${key_R.toUpperCase()}”键上<br/>
+    按<空格键>开始
+    </p></div>`,
+    choices: [' '],
+    prompt: tag_IAT_test_1
 }
 
-var EAST_test = {
-    // stimulus items
-    timeline_variables: [].concat(EAST_attrib_words, EAST_attrib_words, EAST_target_words),
-    // single trial
-    timeline: [{
-            // fixation
-            type: 'html-keyboard-response',
-            stimulus: '+',
-            choices: jsPsych.NO_KEYS,
-            prompt: tag_LR3,
-            trial_duration: 500,
-            post_trial_gap: 0,
-            response_ends_trial: false
-        },
-        {
-            // word stimulus
-            type: 'categorize-html',
-            data: jsPsych.timelineVariable('data'),
-            stimulus: function() {
-                var stim_type = jsPsych.timelineVariable('data', true).stim_type
-                var stimulus = jsPsych.timelineVariable('s', true)
-                switch (stim_type) {
-                    case 'pos':
-                    case 'neg':
-                        return stimulus
-                    case blu:
-                    case grn:
-                        return `<p style="color:${stim_type}">${stimulus}</p>`
-                }
-            },
-            choices: ['f', 'j'],
-            key_answer: function() {
-                switch (jsPsych.timelineVariable('data', true).stim_type) {
-                    case 'pos':
-                    case blu:
-                        return keyCode('f')
-                    case 'neg':
-                    case grn:
-                        return keyCode('j')
-                }
-            },
-            prompt: tag_LR3,
-            correct_text: tag_LR3,
-            incorrect_text: tag_LR3,
-            feedback_duration: function() { return Math.random() * 1000 + 1000 }, // ITI: 1~2s
-            show_stim_with_feedback: false,
-            force_correct_button_press: false,
-            on_finish: function(data) { data.formal = true }
-        },
-    ],
-    // trial presentation
-    repetitions: 2,
-    randomize_order: true
+var IAT_instr5 = {
+    type: 'html-keyboard-response',
+    stimulus: `
+    <div class="tag-bottom"><p>
+    —— 任务5：对“${iat.targetB.label}”词和“${iat.targetA.label}”词分类 ——<br/>
+    <span style="color:#FF6188"><b>注意上方，仍然是两个类别标签，但互换了位置！</b></span><br/>
+    <span style="color:#FFD866"><b>请根据上方标签的提示，尽可能正确并且快速地做出按键反应</b></span><br/>
+    当按键错误时屏幕中会出现<span style="color:red"> X </span>，需要按另一个键纠正才能继续<br/><br/>
+    请把双手食指分别放在键盘的“${key_L.toUpperCase()}”键和“${key_R.toUpperCase()}”键上<br/>
+    按<空格键>开始
+    </p></div>`,
+    choices: [' '],
+    prompt: tag_IAT_prac_target_2
 }
+
+var IAT_instr6 = {
+    type: 'html-keyboard-response',
+    stimulus: `
+    <div class="tag-bottom"><p>
+    —— 任务6：对“${iat.attribA.label}/${iat.targetB.label}”词和“${iat.attribB.label}/${iat.targetA.label}”词分类 ——<br/>
+    <span style="color:#FF6188"><b>注意上方，四类词语将以新的组合方式交替呈现！</b></span><br/>
+    <span style="color:#FFD866"><b>请根据上方标签的提示，尽可能正确并且快速地做出按键反应</b></span><br/>
+    当按键错误时屏幕中会出现<span style="color:red"> X </span>，需要按另一个键纠正才能继续<br/><br/>
+    请把双手食指分别放在键盘的“${key_L.toUpperCase()}”键和“${key_R.toUpperCase()}”键上<br/>
+    按<空格键>开始
+    </p></div>`,
+    choices: [' '],
+    prompt: tag_IAT_test_2
+}
+
+var IAT_instr7 = {
+    type: 'html-keyboard-response',
+    stimulus: `
+    <div class="tag-bottom"><p>
+    —— 任务7：对“${iat.attribA.label}/${iat.targetB.label}”词和“${iat.attribB.label}/${iat.targetA.label}”词分类 ——<br/>
+    <span style="color:#FF6188"><b>与刚才的任务完全相同，请再次对这四类词语分类</b></span><br/>
+    <span style="color:#FFD866"><b>请根据上方标签的提示，尽可能正确并且快速地做出按键反应</b></span><br/>
+    当按键错误时屏幕中会出现<span style="color:red"> X </span>，需要按另一个键纠正才能继续<br/><br/>
+    请把双手食指分别放在键盘的“${key_L.toUpperCase()}”键和“${key_R.toUpperCase()}”键上<br/>
+    按<空格键>开始
+    </p></div>`,
+    choices: [' '],
+    prompt: tag_IAT_test_2
+}
+
+// Generate IAT stimuli and blocks
+
+function generateRandomTrials(n_trials, arr, neighbor_different = true) {
+    var repeats = Math.floor(n_trials / arr.length)
+    if (repeats >= 1) {
+        var array1 = jsPsych.randomization.repeat(arr, repeats)
+        var array2 = jsPsych.randomization.sampleWithoutReplacement(arr, n_trials - array1.length)
+        var array = array1.concat(array2)
+    } else {
+        var array = jsPsych.randomization.sampleWithoutReplacement(arr, n_trials)
+    }
+    if (neighbor_different) {
+        array = jsPsych.randomization.shuffleNoRepeats(array)
+    }
+    return array
+}
+
+function crossArrays(arr1, arr2) {
+    var arr = []
+    for (var i in arr1) { arr.push(arr1[i], arr2[i]) }
+    return arr
+}
+
+function toStimuli(array) {
+    for (var i in array) { array[i] = { s: array[i] } }
+    return array
+}
+
+function blockTemplateIAT(block_id, tag, stimuli, stim_func, key_answer_func, iti = 400) {
+    var IAT = {
+        timeline_variables: toStimuli(stimuli),
+        timeline: [{
+            type: 'html-keyboard-response',
+            stimulus: '',
+            choices: jsPsych.NO_KEYS,
+            prompt: tag,
+            trial_duration: iti, // inter-trial interval
+            response_ends_trial: false
+        }, {
+            type: 'categorize-html',
+            data: { IAT: block_id },
+            stimulus: stim_func,
+            choices: [key_L, key_R],
+            key_answer: key_answer_func,
+            prompt: tag,
+            correct_text: tag,
+            incorrect_text: tag + feedback_wrong,
+            feedback_duration: 0,
+            show_stim_with_feedback: true,
+            force_correct_button_press: true,
+            on_finish: function(data) { data.RT = data.rt } // for computing IAT D-score in feedback
+        }]
+    }
+    return IAT
+}
+
+/**
+ * Standard IAT procedure (adapted from Greenwald, Nosek, & Banaji, 2003, JPSP):
+ *  Block   Trials      Function    Type
+ *      1       20      Practice    Attribute
+ *      2       20      Practice    Target
+ *      3       20      Practice    Combined
+ *      4       40      Test        Combined
+ *      5       20      Practice    Target (reversed)
+ *      6       20      Practice    Combined (reversed)
+ *      7       40      Test        Combined (reversed)
+ */
+
+var IAT1 = blockTemplateIAT(
+    block_id = 1,
+    tag = tag_IAT_prac_attrib,
+    stimuli = generateRandomTrials(20, [].concat(iat.attribA.items, iat.attribB.items)),
+    stim_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        return `<p style="color:${attrib_color}">${stim}</p>`
+    },
+    key_answer_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if (iat.attribA.items.includes(stim)) { return keyCode(key_L) }
+        if (iat.attribB.items.includes(stim)) { return keyCode(key_R) }
+    }
+)
+
+var IAT2 = blockTemplateIAT(
+    block_id = 2,
+    tag = tag_IAT_prac_target_1,
+    stimuli = generateRandomTrials(20, [].concat(iat.targetA.items, iat.targetB.items)),
+    stim_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        return `<p style="color:${target_color}">${stim}</p>`
+    },
+    key_answer_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if (iat.targetA.items.includes(stim)) { return keyCode(key_L) }
+        if (iat.targetB.items.includes(stim)) { return keyCode(key_R) }
+    }
+)
+
+var IAT3 = blockTemplateIAT(
+    block_id = 3,
+    tag = tag_IAT_test_1,
+    stimuli = crossArrays(
+        generateRandomTrials(10, [].concat(iat.attribA.items, iat.attribB.items)),
+        generateRandomTrials(10, [].concat(iat.targetA.items, iat.targetB.items)),
+    ),
+    stim_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if ([].concat(iat.attribA.items, iat.attribB.items).includes(stim)) {
+            return `<p style="color:${attrib_color}">${stim}</p>`
+        }
+        if ([].concat(iat.targetA.items, iat.targetB.items).includes(stim)) {
+            return `<p style="color:${target_color}">${stim}</p>`
+        }
+    },
+    key_answer_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if ([].concat(iat.attribA.items, iat.targetA.items).includes(stim)) { return keyCode(key_L) }
+        if ([].concat(iat.attribB.items, iat.targetB.items).includes(stim)) { return keyCode(key_R) }
+    }
+)
+
+var IAT4 = blockTemplateIAT(
+    block_id = 4,
+    tag = tag_IAT_test_1,
+    stimuli = crossArrays(
+        generateRandomTrials(20, [].concat(iat.attribA.items, iat.attribB.items)),
+        generateRandomTrials(20, [].concat(iat.targetA.items, iat.targetB.items)),
+    ),
+    stim_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if ([].concat(iat.attribA.items, iat.attribB.items).includes(stim)) {
+            return `<p style="color:${attrib_color}">${stim}</p>`
+        }
+        if ([].concat(iat.targetA.items, iat.targetB.items).includes(stim)) {
+            return `<p style="color:${target_color}">${stim}</p>`
+        }
+    },
+    key_answer_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if ([].concat(iat.attribA.items, iat.targetA.items).includes(stim)) { return keyCode(key_L) }
+        if ([].concat(iat.attribB.items, iat.targetB.items).includes(stim)) { return keyCode(key_R) }
+    }
+)
+
+var IAT5 = blockTemplateIAT(
+    block_id = 5,
+    tag = tag_IAT_prac_target_2,
+    stimuli = generateRandomTrials(20, [].concat(iat.targetB.items, iat.targetA.items)),
+    stim_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        return `<p style="color:${target_color}">${stim}</p>`
+    },
+    key_answer_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if (iat.targetB.items.includes(stim)) { return keyCode(key_L) }
+        if (iat.targetA.items.includes(stim)) { return keyCode(key_R) }
+    }
+)
+
+var IAT6 = blockTemplateIAT(
+    block_id = 6,
+    tag = tag_IAT_test_2,
+    stimuli = crossArrays(
+        generateRandomTrials(10, [].concat(iat.attribA.items, iat.attribB.items)),
+        generateRandomTrials(10, [].concat(iat.targetB.items, iat.targetA.items)),
+    ),
+    stim_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if ([].concat(iat.attribA.items, iat.attribB.items).includes(stim)) {
+            return `<p style="color:${attrib_color}">${stim}</p>`
+        }
+        if ([].concat(iat.targetB.items, iat.targetA.items).includes(stim)) {
+            return `<p style="color:${target_color}">${stim}</p>`
+        }
+    },
+    key_answer_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if ([].concat(iat.attribA.items, iat.targetB.items).includes(stim)) { return keyCode(key_L) }
+        if ([].concat(iat.attribB.items, iat.targetA.items).includes(stim)) { return keyCode(key_R) }
+    }
+)
+
+var IAT7 = blockTemplateIAT(
+    block_id = 7,
+    tag = tag_IAT_test_2,
+    stimuli = crossArrays(
+        generateRandomTrials(20, [].concat(iat.attribA.items, iat.attribB.items)),
+        generateRandomTrials(20, [].concat(iat.targetB.items, iat.targetA.items)),
+    ),
+    stim_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if ([].concat(iat.attribA.items, iat.attribB.items).includes(stim)) {
+            return `<p style="color:${attrib_color}">${stim}</p>`
+        }
+        if ([].concat(iat.targetB.items, iat.targetA.items).includes(stim)) {
+            return `<p style="color:${target_color}">${stim}</p>`
+        }
+    },
+    key_answer_func = function() {
+        var stim = jsPsych.timelineVariable('s', true)
+        if ([].concat(iat.attribA.items, iat.targetB.items).includes(stim)) { return keyCode(key_L) }
+        if ([].concat(iat.attribB.items, iat.targetA.items).includes(stim)) { return keyCode(key_R) }
+    }
+)
 
 
 /* Blocks: Feedbacks */
@@ -550,27 +728,76 @@ var debrief1 = {
     }
 }
 
-var debrief2 = {
+function replaceWrongRT(df) {
+    // Replace each wrong-trial RT with block mean + 600 ms (Greewald et al., 2003, JPSP)
+    var rt_mean = df.filter({ correct: true }).select('rt').mean()
+    var wrong = df.filter({ correct: false }).values() // raw data array (modifiable)
+    for (var i in wrong) {
+        wrong[i]['RT'] = rt_mean + 600
+    }
+}
+
+var IAT_results = { IAT_D: null, IAT_D_prac: null, IAT_D_test: null }
+
+var debrief_IAT = {
     type: 'html-keyboard-response',
+    on_start: set_html_style,
     stimulus: function() {
-        var data = jsPsych.data.get()
-        var east_a_grn = data.filter({ formal: true, correct: true, stim_type: grn, x: 'a' }).select('rt').mean()
-        var east_a_blu = data.filter({ formal: true, correct: true, stim_type: blu, x: 'a' }).select('rt').mean()
-        var east_b_grn = data.filter({ formal: true, correct: true, stim_type: grn, x: 'b' }).select('rt').mean()
-        var east_b_blu = data.filter({ formal: true, correct: true, stim_type: blu, x: 'b' }).select('rt').mean()
-        var east_c_grn = data.filter({ formal: true, correct: true, stim_type: grn, x: 'c' }).select('rt').mean()
-        var east_c_blu = data.filter({ formal: true, correct: true, stim_type: blu, x: 'c' }).select('rt').mean()
-        var east_a = east_a_grn - east_a_blu
-        var east_b = east_b_grn - east_b_blu
-        var east_c = east_c_grn - east_c_blu
+        // See the scoring algorithm of IAT D-score in Greewald et al. (2003)
+        if (compatible_first) {
+            var block_ids = { compat: [{ IAT: 3 }, { IAT: 4 }], incomp: [{ IAT: 6 }, { IAT: 7 }] }
+        } else {
+            var block_ids = { compat: [{ IAT: 6 }, { IAT: 7 }], incomp: [{ IAT: 3 }, { IAT: 4 }] }
+        }
+        var df_iat_raw = jsPsych.data.get().filter([{ IAT: 3 }, { IAT: 4 }, { IAT: 6 }, { IAT: 7 }]) // data frame (jsPsych 'Data Collection' class)
+        var df = df_iat_raw.filterCustom(function(trial) { return trial.rt < 10000 })
+
+        var n_trials_less_than_300ms = df.filterCustom(function(trial) { return trial.rt < 300 }).count()
+        var p_too_fast = n_trials_less_than_300ms / df.count()
+        var validity = (p_too_fast < 0.1) ? `` :
+            `<span style="color:red">抱歉，由于你的随意按键反应过多（${(100 * p_too_fast).toFixed(1)}%），你的结果无效！</span><br/>`
+
+        var iat_compat_prac = df.filter(block_ids.compat[0])
+        var iat_compat_test = df.filter(block_ids.compat[1])
+        var iat_incomp_prac = df.filter(block_ids.incomp[0])
+        var iat_incomp_test = df.filter(block_ids.incomp[1])
+
+        replaceWrongRT(iat_compat_prac)
+        replaceWrongRT(iat_compat_test)
+        replaceWrongRT(iat_incomp_prac)
+        replaceWrongRT(iat_incomp_test)
+
+        var mean_diff_prac = iat_incomp_prac.select('RT').mean() - iat_compat_prac.select('RT').mean()
+        var mean_diff_test = iat_incomp_test.select('RT').mean() - iat_compat_test.select('RT').mean()
+        var sd_pooled_prac = iat_compat_prac.join(iat_incomp_prac).select('rt').sd()
+        var sd_pooled_test = iat_compat_test.join(iat_incomp_test).select('rt').sd()
+        var IAT_D_prac = mean_diff_prac / sd_pooled_prac
+        var IAT_D_test = mean_diff_test / sd_pooled_test
+        var IAT_D = (IAT_D_prac + IAT_D_test) / 2
+
+        IAT_results.IAT_D = IAT_D
+        IAT_results.IAT_D_prac = IAT_D_prac
+        IAT_results.IAT_D_test = IAT_D_test
+
         return `
         <p style="text-align: left">
-        结果反馈（实验部分）：<br/><br/>
-        你对玫瑰、牡丹的内隐态度：${east_a.toFixed(2)}<br/>
-        你对空气、土地的内隐态度：${east_b.toFixed(2)}<br/>
-        你对蟑螂、蚊子的内隐态度：${east_c.toFixed(2)}<br/>
-        （小于0 = 消极，0 = 中性，大于0 = 积极）<br/><br/>
-        （按任意键继续）</p>`
+        <b>结果反馈：</b><br/>
+        ${validity}
+        你的内隐联系测验<em>D </em>分数 = <b>${IAT_D.toFixed(2)}</b><br/>
+        ——练习任务<em>D </em>分数 = ${IAT_D_prac.toFixed(2)}<br/>
+        &emsp;&emsp;（反应时之差 = ${mean_diff_prac.toFixed(0)}ms，合并标准差 = ${sd_pooled_prac.toFixed(0)}ms）<br/>
+        ——正式任务<em>D </em>分数 = ${IAT_D_test.toFixed(2)}<br/>
+        &emsp;&emsp;（反应时之差 = ${mean_diff_test.toFixed(0)}ms，合并标准差 = ${sd_pooled_test.toFixed(0)}ms）<br/>
+        <br/><b><em>D </em>分数解释：</b><br/>
+        大于0：对「${iat_temp.attribA.label} + ${iat_temp.targetA.label}」「${iat_temp.attribB.label} + ${iat_temp.targetB.label}」的内隐联系更紧密<br/>
+        小于0：对「${iat_temp.attribA.label} + ${iat_temp.targetB.label}」「${iat_temp.attribB.label} + ${iat_temp.targetA.label}」的内隐联系更紧密<br/>
+        绝对值：0.2 = 小效应，0.5 = 中等效应，0.8 = 大效应<br/>
+        <br/>（按任意键继续）</p>`
+    },
+    on_finish: function(data) {
+        data.varname = 'IAT_feedback'
+        data.summary = JSON.stringify(IAT_results)
+            // extract in R:  jsonlite::fromJSON(subset(data, varname=='IAT_feedback')$summary)
     }
 }
 
@@ -579,27 +806,30 @@ var debrief2 = {
 
 var demographics = {
     timeline: [
-        Sex, Age, Birth, Language, School, Email,
+        Sex, Age, Birth, Phone,
     ]
 }
 
 var surveys = {
     timeline: [
-        NameLiking,
+        Father_edu, Mather_edu, 
+        Income, Subjective_ses,
         instr_4, RSES,
         instr_7, SWLS,
         debrief1,
     ]
 }
 
-var EAST = {
+var IAT = {
     timeline: [
-        set_html_style_EAST,
-        EAST_prac1_instr, EAST_prac1,
-        EAST_prac2_instr, EAST_prac2,
-        EAST_test_instr, EAST_test_warmup, EAST_test,
-        set_html_style,
-        debrief2,
+        IAT_instr0,
+        IAT_instr1, IAT1,
+        IAT_instr2, IAT2,
+        IAT_instr3, IAT3,
+        IAT_instr4, IAT4,
+        IAT_instr5, IAT5,
+        IAT_instr6, IAT6,
+        IAT_instr7, IAT7,
     ]
 }
 
@@ -610,7 +840,8 @@ var main_timeline = [
     warmup,
     demographics,
     surveys,
-    EAST,
+    IAT,
+    debrief_IAT,
     OpenEnded,
     close_fullscreen,
 ]
