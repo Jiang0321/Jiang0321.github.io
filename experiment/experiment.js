@@ -34,18 +34,6 @@ var instr = {
   button_label_next: "继续",
 };
 
-// 设置网页整体的背景色、字体等
-var set_html_style = {
-  type: "call-function",
-  func: function() {
-    document.body.style.backgroundColor = "rgb(245, 245, 245)";  // "#F0F0F0"
-    document.body.style.color = "black";  // font color
-    document.body.style.fontSize = "24px";  // 1px = 0.75pt; px = pt * DPI / 72
-    document.body.style.fontFamily = "等线";
-    document.body.style.fontWeight = "bold";  // or "normal"
-  },
-};
-
 // 定义实验流程（时间线）
 var timeline = [
   set_html_style,  // 先设置背景色和字体
@@ -58,5 +46,6 @@ jsPsych.init({
   timeline: timeline,
   on_finish: function() {
     jsPsych.data.get().localSave("csv", "data.csv");
+    document.write("<h1 style='text-align:center; height:500pt; line-height:500pt'>实验结束，感谢您的参与！</h1>");
   }
 });
