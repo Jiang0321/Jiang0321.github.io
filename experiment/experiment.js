@@ -36,7 +36,6 @@ var instr = {
 
 // 定义实验流程（时间线）
 var timeline = [
-  set_html_style,  // 先设置背景色和字体
   welcome,
   instr,  // 再呈现指导语
 ];
